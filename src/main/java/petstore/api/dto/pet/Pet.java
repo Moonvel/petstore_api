@@ -1,7 +1,16 @@
 package petstore.api.dto.pet;
 
+import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Pet {
 
   private int id;
@@ -11,32 +20,18 @@ public class Pet {
   private List<TagsItem> tags;
   private String status;
 
-
-  public List<String> getPhotoUrls() {
-    return photoUrls;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public Category getCategory() {
-    return category;
-  }
-
-  public List<TagsItem> getTags() {
-    return tags;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setName(String name) {
-    this.name = name;
+  public static Pet defaultPet() {
+    Category hedgehog = Category.builder().id(7).name("Ежи").build();
+    TagsItem thorny = TagsItem.builder().id(2).name("Колючие").build();
+    List<TagsItem> tags = new ArrayList<>();
+    tags.add(thorny);
+    return Pet
+        .builder()
+        .id(111)
+        .category(hedgehog)
+        .name("Курва Ежик")
+        .tags(tags)
+        .status("available")
+        .build();
   }
 }

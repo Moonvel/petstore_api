@@ -7,6 +7,7 @@ import static petstore.api.tools.Specifications.responseSpecError;
 import static petstore.api.tools.Specifications.responseSpecOK200;
 
 import jdk.jfr.Description;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -14,16 +15,18 @@ import petstore.api.dto.pet.Pet;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class PetStoreApiTests {
-  public static final String baseUrl = "https://petstore.swagger.io/v2";
-  public static final Long responseTime = 2000L;
 
+  public static final String baseUrl = "https://petstore.swagger.io/v2";
+  public static final Long responseTime = 4000L;
+
+  private static Pet pet = new Pet();
 
   @Test
   @Order(1)
   @Description("Добавление нового питомца")
   public void addNewPet() {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-    Pet pet = Pet.defaultPet();
+    pet = Pet.defaultPet();
     given()
         .body(pet)
         .when()
@@ -32,13 +35,14 @@ public class PetStoreApiTests {
 
   @Test
   @Order(2)
-  @Description("Поиск существующего питомца")
-  public void findPetById() {
+  @Description("Поиск и сравнение питомца созданного в первом тесте")
+  public void findPetByIdTest() {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-    Pet pet = given()
+    Pet receivedPet = given()
         .when()
         .get(EndPoints.findPet, Pet.defaultPet().getId())
         .as(Pet.class);
+    Assertions.assertThat(pet).isEqualTo(receivedPet);
   }
 
   @Test

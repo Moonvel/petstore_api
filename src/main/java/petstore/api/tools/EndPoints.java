@@ -7,5 +7,6 @@ public final class EndPoints {
   public static final String updatingPet = "/pet";
   public static final String uploadAnImage = "/pet/{petId}/uploadImage";
   public static final String findByStatus = "/pet/findByStatus";
+  public static final String updatesPetWithFormData = "/pet/{petId}";
 
 }

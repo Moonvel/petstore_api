@@ -19,6 +19,14 @@ public class Specifications {
         .build();
   }
 
+  public static RequestSpecification requestSpecMultiPart(String url) {
+    return new RequestSpecBuilder()
+        .setBaseUri(url)
+        .setContentType(ContentType.MULTIPART)
+        .setAccept(ContentType.JSON)
+        .build();
+  }
+
   public static ResponseSpecification responseSpecOK200(Long responseTime) {
     return new ResponseSpecBuilder()
         .expectStatusCode(200)

@@ -3,11 +3,14 @@ package petstore.api.tools;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import static petstore.api.tools.Specifications.requestSpec;
+import static petstore.api.tools.Specifications.requestSpecMultiPart;
 import static petstore.api.tools.Specifications.responseSpecError;
 import static petstore.api.tools.Specifications.responseSpecOK200;
 
+import java.io.File;
 import jdk.jfr.Description;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -47,16 +50,41 @@ public class PetStoreApiTests {
 
   @Test
   @Order(3)
+  @Description("Обновление существующего питомца")
+  public void updatingPet() {
+    pet.setStatus("sold");
+    Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+    given()
+        .body(pet)
+        .when()
+        .put(EndPoints.updatingPet);
+  }
+
+  @Test
+  @Order(4)
+  @Description("Загрузить изображение питомца по id")
+  public void uploadPetImageTest() {
+    Specifications.installSpecification(requestSpecMultiPart(baseUrl), responseSpecOK200(responseTime));
+    given()
+        .baseUri("https://petstore.swagger.io/v2")
+        .multiPart(new File("src/test/resources/hhSmile.jpg"))
+        .when()
+        .post(EndPoints.uploadAnImage, pet.getId());
+  }
+
+  @Test
+  @Order(5)
   @Description("Удаление созданного питомца")
   public void deletePetByIdTest() {
-    Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+    Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(200));
     given()
         .when()
         .delete(EndPoints.deletePet, pet.getId());
   }
 
+
   @Test
-  @Order(4)
+  @Order(6)
   @Description("Поиск несуществующего питомца")
   public void nonExistPetTest() {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(404));

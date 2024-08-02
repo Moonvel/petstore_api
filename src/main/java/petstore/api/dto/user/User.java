@@ -1,10 +1,14 @@
 package petstore.api.dto.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
   private String firstName;
@@ -27,5 +31,9 @@ public class User {
 				.phone("+188-66-22")
 				.userStatus(1)
 				.build();
+  }
+
+  public static User noNameUser() {
+    return User.builder().id(112).username("NoName").build();
   }
 }

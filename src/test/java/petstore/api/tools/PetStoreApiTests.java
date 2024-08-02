@@ -124,6 +124,24 @@ public class PetStoreApiTests {
         .allMatch(pet -> pet.getStatus().equals(status.getStatus()));
   }
 
+  @Test
+  @Description("Использование некорректного body при добавлении питомца")
+  public void addPetWrongBodyTest() {
+    Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(500));
+    given()
+        .body("[]")
+        .when()
+        .post(EndPoints.addPet);
+  }
+
+  @Test
+  public void addPetWrongHttpMethodeTest() {
+    Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(405));
+    given()
+        .when()
+        .get(EndPoints.addPet);
+  }
+
 
 
 }

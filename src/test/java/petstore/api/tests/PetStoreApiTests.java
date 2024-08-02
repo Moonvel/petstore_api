@@ -1,4 +1,4 @@
-package petstore.api.tools;
+package petstore.api.tests;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,6 +19,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import petstore.api.dto.pet.Pet;
 import petstore.api.dto.pet.Status;
+import petstore.api.tools.PetEndPoints;
+import petstore.api.tools.Specifications;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class PetStoreApiTests {
@@ -37,7 +39,7 @@ public class PetStoreApiTests {
     given()
         .body(pet)
         .when()
-        .post(EndPoints.addPet);
+        .post(PetEndPoints.addPet);
   }
 
   @Test
@@ -47,7 +49,7 @@ public class PetStoreApiTests {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
     Pet receivedPet = given()
         .when()
-        .get(EndPoints.findPet, Pet.defaultPet().getId())
+        .get(PetEndPoints.findPet, Pet.defaultPet().getId())
         .as(Pet.class);
     assertThat(pet).isEqualTo(receivedPet);
   }
@@ -61,7 +63,7 @@ public class PetStoreApiTests {
     given()
         .body(pet)
         .when()
-        .put(EndPoints.updatingPet);
+        .put(PetEndPoints.updatingPet);
   }
 
   @Test
@@ -73,7 +75,7 @@ public class PetStoreApiTests {
         .formParam("name", "changed")
         .formParam("status", "dead")
         .when()
-        .post(EndPoints.updatesPetWithFormData, 111);
+        .post(PetEndPoints.updatesPetWithFormData, 111);
   }
 
   @Test
@@ -86,7 +88,7 @@ public class PetStoreApiTests {
         .baseUri("https://petstore.swagger.io/v2")
         .multiPart(new File("src/test/resources/hhSmile.jpg"))
         .when()
-        .post(EndPoints.uploadAnImage, pet.getId());
+        .post(PetEndPoints.uploadAnImage, pet.getId());
   }
 
   @Test
@@ -96,7 +98,7 @@ public class PetStoreApiTests {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(200));
     given()
         .when()
-        .delete(EndPoints.deletePet, pet.getId());
+        .delete(PetEndPoints.deletePet, pet.getId());
   }
 
 
@@ -106,7 +108,7 @@ public class PetStoreApiTests {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(404));
     given()
         .when()
-        .get(EndPoints.findPet, pet.getId());
+        .get(PetEndPoints.findPet, pet.getId());
   }
 
   @ParameterizedTest
@@ -117,7 +119,7 @@ public class PetStoreApiTests {
     Response response = given()
         .when()
         .queryParam("status", status.getStatus())
-        .get(EndPoints.findByStatus);
+        .get(PetEndPoints.findByStatus);
     Pet[] pets = response.as(Pet[].class);
     assertThat(pets)
         .isNotEmpty()
@@ -131,7 +133,7 @@ public class PetStoreApiTests {
     given()
         .body("[]")
         .when()
-        .post(EndPoints.addPet);
+        .post(PetEndPoints.addPet);
   }
 
   @Test
@@ -139,9 +141,7 @@ public class PetStoreApiTests {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(405));
     given()
         .when()
-        .get(EndPoints.addPet);
+        .get(PetEndPoints.addPet);
   }
-
-
 
 }

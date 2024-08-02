@@ -1,6 +1,6 @@
 package petstore.api.tools;
 
-public final class EndPoints {
+public final class PetEndPoints {
   public static final String addPet = "/pet";
   public static final String findPet = "/pet/{petId}";
   public static final String deletePet = "/pet/{petId}";

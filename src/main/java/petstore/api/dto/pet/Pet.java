@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Pet {
 
-    private int id;
+    private long id;
     private Category category;
     private String name;
     private List<String> photoUrls;

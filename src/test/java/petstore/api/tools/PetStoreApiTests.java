@@ -1,20 +1,23 @@
 package petstore.api.tools;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import static petstore.api.tools.Specifications.requestSpec;
 import static petstore.api.tools.Specifications.requestSpecMultiPart;
 import static petstore.api.tools.Specifications.responseSpecError;
 import static petstore.api.tools.Specifications.responseSpecOK200;
 
+import io.restassured.response.Response;
 import java.io.File;
 import jdk.jfr.Description;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import petstore.api.dto.pet.Pet;
+import petstore.api.dto.pet.Status;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class PetStoreApiTests {
@@ -45,7 +48,7 @@ public class PetStoreApiTests {
         .when()
         .get(EndPoints.findPet, Pet.defaultPet().getId())
         .as(Pet.class);
-    Assertions.assertThat(pet).isEqualTo(receivedPet);
+    assertThat(pet).isEqualTo(receivedPet);
   }
 
   @Test
@@ -64,7 +67,8 @@ public class PetStoreApiTests {
   @Order(4)
   @Description("Загрузить изображение питомца по id")
   public void uploadPetImageTest() {
-    Specifications.installSpecification(requestSpecMultiPart(baseUrl), responseSpecOK200(responseTime));
+    Specifications.installSpecification(requestSpecMultiPart(baseUrl),
+        responseSpecOK200(responseTime));
     given()
         .baseUri("https://petstore.swagger.io/v2")
         .multiPart(new File("src/test/resources/hhSmile.jpg"))
@@ -84,7 +88,6 @@ public class PetStoreApiTests {
 
 
   @Test
-  @Order(6)
   @Description("Поиск несуществующего питомца")
   public void nonExistPetTest() {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(404));
@@ -93,5 +96,19 @@ public class PetStoreApiTests {
         .get(EndPoints.findPet, pet.getId());
   }
 
+  @ParameterizedTest
+  @EnumSource(Status.class)
+  @Description("Поиск питомца по статусу, проверка на соответсвтие статуса питомцев искомому")
+  public void findByStatusTest(Status status) {
+    Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+    Response response = given()
+        .when()
+        .queryParam("status", status.getStatus())
+        .get(EndPoints.findByStatus);
+    Pet[] pets = response.as(Pet[].class);
+    assertThat(pets)
+        .isNotEmpty()
+        .allMatch(pet -> pet.getStatus().equals(status.getStatus()));
+  }
 
 }

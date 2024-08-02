@@ -46,10 +46,24 @@ public class PetStoreApiTests {
   }
 
   @Test
+  @Order(3)
+  @Description("Удаление созданного питомца")
+  public void deletePetByIdTest() {
+    Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+    given()
+        .when()
+        .delete(EndPoints.deletePet, pet.getId());
+  }
+
+  @Test
+  @Order(4)
   @Description("Поиск несуществующего питомца")
   public void nonExistPetTest() {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(404));
     given()
-        .get(EndPoints.findPet, Integer.MAX_VALUE);
+        .when()
+        .get(EndPoints.findPet, pet.getId());
   }
+
+
 }

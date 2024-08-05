@@ -13,12 +13,14 @@ import java.io.File;
 import petstore.api.dto.pet.Pet;
 import petstore.api.dto.pet.Status;
 import petstore.api.endpoints.PetEndPoints;
+import petstore.api.props.PropsHelper;
 import petstore.api.spec.Specifications;
 
 
 public abstract class PetSteps {
+    static PropsHelper propsHelper = new PropsHelper();
 
-    public static final String baseUrl = "https://petstore.swagger.io/v2";
+    public static final String baseUrl = propsHelper.getProperty("baseUrl");
     public static final Long responseTime = 4000L;
 
     @Step("Добавление питомца")

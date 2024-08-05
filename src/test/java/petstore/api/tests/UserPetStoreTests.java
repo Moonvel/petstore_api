@@ -6,15 +6,9 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import petstore.api.dto.user.User;
-import petstore.api.spec.Specifications;
 import petstore.api.steps.UserSteps;
 
 import java.util.List;
-
-import static petstore.api.spec.Specifications.requestSpec;
-import static petstore.api.spec.Specifications.responseSpecOK200;
-import static petstore.api.tests.PetStoreApiTests.baseUrl;
-import static petstore.api.tests.PetStoreApiTests.responseTime;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class UserPetStoreTests {
@@ -46,7 +40,6 @@ public class UserPetStoreTests {
   @Test
   @Description("Обновление пользователя")
   public void updateUserTest() {
-    Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
     user.setUserStatus(2);
     UserSteps.updateUser(user);
   }

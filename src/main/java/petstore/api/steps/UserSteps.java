@@ -3,6 +3,7 @@ package petstore.api.steps;
 import io.qameta.allure.Step;
 import petstore.api.dto.user.User;
 import petstore.api.endpoints.UserEndPoints;
+import petstore.api.props.PropsHelper;
 import petstore.api.spec.Specifications;
 
 import java.util.List;
@@ -12,8 +13,9 @@ import static petstore.api.spec.Specifications.requestSpec;
 import static petstore.api.spec.Specifications.responseSpecOK200;
 
 public abstract class UserSteps {
+	static PropsHelper propsHelper = new PropsHelper();
 
-	public static final String baseUrl = "https://petstore.swagger.io/v2";
+	public static final String baseUrl = propsHelper.getProperty("baseUrl");
 	public static final Long responseTime = 4000L;
 
 	@Step("Создание пользователя")
@@ -45,6 +47,7 @@ public abstract class UserSteps {
 
 	@Step("Обновление пользователя")
 	public static void updateUser(User user) {
+		Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
 		given()
 				.body(user)
 				.when()

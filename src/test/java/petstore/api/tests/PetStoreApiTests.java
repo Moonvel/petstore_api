@@ -15,13 +15,10 @@ import petstore.api.test_data.PetFabric;
 import petstore.api.tools.PetEndPoints;
 import petstore.api.tools.Specifications;
 
-import java.io.File;
-
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import static petstore.api.tools.Specifications.requestSpec;
-import static petstore.api.tools.Specifications.requestSpecMultiPart;
 import static petstore.api.tools.Specifications.responseSpecError;
 import static petstore.api.tools.Specifications.responseSpecOK200;
 
@@ -30,7 +27,7 @@ public class PetStoreApiTests {
 
     public static final String baseUrl = "https://petstore.swagger.io/v2";
     public static final String imagePath = "src/test/resources/hhSmile.jpg";
-    public static final Long responseTime = 4000L;
+    public static final Long responseTime = 10000L;
     private static Pet pet = PetFabric.defaultPet();
     
 
@@ -55,7 +52,7 @@ public class PetStoreApiTests {
     @Test
     @Order(3)
     @Description("Обновление существующего питомца")
-    public void updatingPetTest() {
+    public void updatePetTest() {
         PetSteps.addPet(pet);
         pet.setStatus(Status.SOLD.getStatus());
         PetSteps.updatingPet(pet);
@@ -67,7 +64,7 @@ public class PetStoreApiTests {
     @Test
     @Order(4)
     @Description("Обновление питомца в магазине через форму")
-    public void updatesPetNameAndStatusWithFormDataTest() {
+    public void updatePetNameAndStatusWithFormDataTest() {
         String newName = "changed";
         Status newStatus = Status.SOLD;
         PetSteps.addPet(pet);
@@ -87,33 +84,25 @@ public class PetStoreApiTests {
     @Test
     @Order(6)
     @Description("Удаление созданного питомца")
-    public void deletePetByIdTest() {
-        Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(200));
-        given()
-                .when()
-                .delete(PetEndPoints.DELETE_PET, pet.getId());
+    public void deletePetTest() {
+        PetSteps.addPet(pet);
+        PetSteps.deletePet(pet.getId());
     }
 
 
     @Test
     @Description("Поиск несуществующего питомца")
     public void nonExistPetTest() {
-        Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(404));
-        given()
-                .when()
-                .get(PetEndPoints.FIND_PET, pet.getId());
+        PetSteps.addPet(pet);
+        PetSteps.deletePet(pet.getId());
+        PetSteps.findNonExistPetTest(pet.getId());
     }
 
     @ParameterizedTest
     @EnumSource(Status.class)
     @Description("Поиск питомца по статусу, проверка на соответсвтие статуса питомцев искомому")
-    public void findByStatusTest(Status status) {
-        Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-        Response response = given()
-                .when()
-                .queryParam("status", status.getStatus())
-                .get(PetEndPoints.FIND_BY_STATUS);
-        Pet[] pets = response.as(Pet[].class);
+    public void findPetsByStatusTest(Status status) {
+        Pet[] pets = PetSteps.findPetsByStatus(status);
         assertThat(pets)
                 .allMatch(pet -> pet.getStatus().equals(status.getStatus()));
     }

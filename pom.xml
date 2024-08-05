@@ -17,6 +17,9 @@
     <lombok.version>1.18.34</lombok.version>
     <assertj.version>3.26.3</assertj.version>
     <junit.version>5.11.0-M2</junit.version>
+    <allure-junit5>2.28.1</allure-junit5>
+    <aspectj.version>1.9.21</aspectj.version>
+    <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -67,21 +70,38 @@
       <artifactId>assertj-core</artifactId>
       <version>${assertj.version}</version>
     </dependency>
-
-    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
-    <!--    <dependency>-->
-    <!--      <groupId>com.fasterxml.jackson.core</groupId>-->
-    <!--      <artifactId>jackson-core</artifactId>-->
-    <!--      <version>${jackson.version}</version>-->
-    <!--    </dependency>-->
-    <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
     <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.11.0</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
-
-
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-junit5</artifactId>
+      <version>${allure-junit5}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+        <configuration>
+          <argLine>
+            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+          </argLine>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
 </project>

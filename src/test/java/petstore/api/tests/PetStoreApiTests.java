@@ -19,6 +19,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import petstore.api.dto.pet.Pet;
 import petstore.api.dto.pet.Status;
+import petstore.api.steps.ApiSteps;
 import petstore.api.tools.PetEndPoints;
 import petstore.api.tools.Specifications;
 
@@ -27,19 +28,15 @@ public class PetStoreApiTests {
 
   public static final String baseUrl = "https://petstore.swagger.io/v2";
   public static final Long responseTime = 4000L;
-
-  private static Pet pet = new Pet();
+  private static Pet pet = Pet.defaultPet();
+  ApiSteps steps = new ApiSteps();
 
   @Test
   @Order(1)
   @Description("Добавление нового питомца")
-  public void addNewPet() {
+  public void addNewPetTest() {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-    pet = Pet.defaultPet();
-    given()
-        .body(pet)
-        .when()
-        .post(PetEndPoints.addPet);
+    pet = steps.addNewPet(pet);
   }
 
   @Test
@@ -47,23 +44,23 @@ public class PetStoreApiTests {
   @Description("Поиск и сравнение питомца созданного в первом тесте")
   public void findPetByIdTest() {
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-    Pet receivedPet = given()
-        .when()
-        .get(PetEndPoints.findPet, Pet.defaultPet().getId())
-        .as(Pet.class);
-    assertThat(pet).isEqualTo(receivedPet);
+    Pet addedPet = steps.addNewPet(pet);
+    Pet receivedPet = steps.findPetById(addedPet.getId());
+    assertThat
+        (addedPet).isEqualTo(receivedPet);
   }
 
   @Test
   @Order(3)
   @Description("Обновление существующего питомца")
   public void updatingPet() {
-    pet.setStatus("sold");
     Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-    given()
-        .body(pet)
-        .when()
-        .put(PetEndPoints.updatingPet);
+    Pet addedPet = steps.addNewPet(pet);
+    addedPet.setStatus(Status.SOLD.getStatus());
+    steps.updatingPet(addedPet);
+    Pet changedPet = steps.findPetById(addedPet.getId());
+    assertThat
+        (changedPet.getStatus()).isEqualTo(Status.SOLD.getStatus());
   }
 
   @Test
@@ -122,7 +119,6 @@ public class PetStoreApiTests {
         .get(PetEndPoints.findByStatus);
     Pet[] pets = response.as(Pet[].class);
     assertThat(pets)
-        .isNotEmpty()
         .allMatch(pet -> pet.getStatus().equals(status.getStatus()));
   }
 

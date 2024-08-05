@@ -1,11 +1,11 @@
 package petstore.api.dto.pet;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 
 @Builder(setterPrefix = "set")
-@Getter
+@Data
 public class TagsItem {
     private int id;
     private String name;

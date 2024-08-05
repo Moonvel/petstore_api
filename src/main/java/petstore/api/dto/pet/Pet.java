@@ -1,14 +1,12 @@
 package petstore.api.dto.pet;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 
 @Builder(setterPrefix = "set")
-@Getter
-@Setter
+@Data
 public class Pet {
     private long id;
     private Category category;

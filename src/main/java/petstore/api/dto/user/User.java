@@ -1,17 +1,18 @@
 package petstore.api.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+@Builder(setterPrefix = "set")
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
 
+public class User {
   private String firstName;
   private String lastName;
   private String password;
@@ -23,18 +24,21 @@ public class User {
 
   public static User defaultUser() {
     return User.builder()
-				.id(111)
-				.username("JustUser")
-				.firstName("Bob")
-				.lastName("White")
-        .email("Bob@white.com")
-				.password("123")
-				.phone("+188-66-22")
-				.userStatus(1)
+				.setId(111)
+				.setUsername("JustUser")
+				.setFirstName("Bob")
+				.setLastName("White")
+        .setEmail("Bob@white.com")
+				.setPassword("123")
+				.setPhone("+188-66-22")
+				.setUserStatus(1)
 				.build();
   }
 
   public static User noNameUser() {
-    return User.builder().id(112).username("NoName").build();
+    return User.builder()
+				.setId(112)
+				.setUsername("NoName")
+				.build();
   }
 }

@@ -2,6 +2,7 @@ package petstore.api.test_data;
 
 import petstore.api.dto.pet.Category;
 import petstore.api.dto.pet.Pet;
+import petstore.api.dto.pet.Status;
 import petstore.api.dto.pet.TagsItem;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public abstract class PetFabric {
                 .setName("Курва Ежик")
                 .setPhotoUrls(urls)
                 .setTags(tags)
-                .setStatus("available")
+                .setStatus(Status.AVAILABLE.getStatus())
                 .build();
     }
 }

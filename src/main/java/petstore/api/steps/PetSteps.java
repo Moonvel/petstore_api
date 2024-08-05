@@ -7,33 +7,32 @@ import petstore.api.tools.PetEndPoints;
 import static io.restassured.RestAssured.given;
 
 // ToDo Abstract
-public class ApiSteps {
+public abstract class PetSteps {
 
     // ToDo static
     @Step("Добавление питомца")
-    public Pet addNewPet(Pet pet) {
+    public static void addPet(Pet pet) {
         given()
                 .body(pet)
                 .when()
-                .post(PetEndPoints.addPet)
+                .post(PetEndPoints.ADD_PET)
                 .then()
                 .statusCode(200);
-        return pet;
     }
 
     @Step("Поиск питомца по id")
-    public Pet findPetById(long id) {
+    public static Pet findPet(long id) {
         return given()
                 .when()
-                .get(PetEndPoints.findPet, id)
+                .get(PetEndPoints.FIND_PET, id)
                 .as(Pet.class);
     }
 
     @Step("Обновление существущего питомца")
-    public void updatingPet(Pet pet) {
+    public static void updatingPet(Pet pet) {
         given()
                 .body(pet)
                 .when()
-                .put(PetEndPoints.updatingPet);
+                .put(PetEndPoints.UPDATING_PET);
     }
 }

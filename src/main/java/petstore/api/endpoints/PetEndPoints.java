@@ -1,4 +1,4 @@
-package petstore.api.tools;
+package petstore.api.endpoints;
 
 public final class PetEndPoints {
     public static final String ADD_PET = "/pet";

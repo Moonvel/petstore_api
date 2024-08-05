@@ -2,9 +2,7 @@ package petstore.api.tests;
 
 import jdk.jfr.Description;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import petstore.api.dto.pet.Pet;
@@ -13,27 +11,23 @@ import petstore.api.steps.PetSteps;
 import petstore.api.test_data.PetFabric;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 
-@TestMethodOrder(OrderAnnotation.class)
 public class PetStoreApiTests {
 
     public static final String baseUrl = "https://petstore.swagger.io/v2";
     public static final String imagePath = "src/test/resources/hhSmile.jpg";
     public static final Long responseTime = 10000L;
     private static Pet pet = PetFabric.defaultPet();
-    
+
 
 
     @Test
-    @Order(1)
     @Description("Добавление нового питомца")
     public void addNewPetTest() {
         PetSteps.addPet(pet);
     }
 
     @Test
-    @Order(2)
     @Description("Поиск и сравнение питомца созданного в первом тесте")
     public void findPetByIdTest() {
         PetSteps.addPet(pet);
@@ -43,7 +37,6 @@ public class PetStoreApiTests {
     }
 
     @Test
-    @Order(3)
     @Description("Обновление существующего питомца")
     public void updatePetTest() {
         PetSteps.addPet(pet);
@@ -55,7 +48,6 @@ public class PetStoreApiTests {
     }
 
     @Test
-    @Order(4)
     @Description("Обновление питомца в магазине через форму")
     public void updatePetNameAndStatusWithFormDataTest() {
         String newName = "changed";
@@ -68,14 +60,12 @@ public class PetStoreApiTests {
     }
 
     @Test
-    @Order(5)
     @Description("Загрузить изображение питомца по id")
     public void uploadAnImageTest() {
         PetSteps.uploadAnImageTest(pet.getId(), imagePath);
     }
 
     @Test
-    @Order(6)
     @Description("Удаление созданного питомца")
     public void deletePetTest() {
         PetSteps.addPet(pet);

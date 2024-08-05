@@ -1,4 +1,4 @@
-package petstore.api.tools;
+package petstore.api.spec;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;

@@ -7,6 +7,6 @@ import lombok.Data;
 @Builder(setterPrefix = "set")
 @Data
 public class TagsItem {
-    private int id;
+    private long id;
     private String name;
 }

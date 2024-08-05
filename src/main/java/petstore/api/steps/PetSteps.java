@@ -1,19 +1,19 @@
 package petstore.api.steps;
 
 import static io.restassured.RestAssured.given;
-import static petstore.api.tools.Specifications.requestSpec;
-import static petstore.api.tools.Specifications.requestSpecMultiPart;
-import static petstore.api.tools.Specifications.requestSpecUrlenc;
-import static petstore.api.tools.Specifications.responseSpecError;
-import static petstore.api.tools.Specifications.responseSpecOK200;
+import static petstore.api.spec.Specifications.requestSpec;
+import static petstore.api.spec.Specifications.requestSpecMultiPart;
+import static petstore.api.spec.Specifications.requestSpecUrlenc;
+import static petstore.api.spec.Specifications.responseSpecError;
+import static petstore.api.spec.Specifications.responseSpecOK200;
 
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import java.io.File;
 import petstore.api.dto.pet.Pet;
 import petstore.api.dto.pet.Status;
-import petstore.api.tools.PetEndPoints;
-import petstore.api.tools.Specifications;
+import petstore.api.endpoints.PetEndPoints;
+import petstore.api.spec.Specifications;
 
 
 public abstract class PetSteps {

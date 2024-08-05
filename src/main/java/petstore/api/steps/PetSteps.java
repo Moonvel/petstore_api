@@ -1,7 +1,6 @@
 package petstore.api.steps;
 
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 import static petstore.api.tools.Specifications.requestSpec;
 import static petstore.api.tools.Specifications.requestSpecMultiPart;
 import static petstore.api.tools.Specifications.requestSpecUrlenc;
@@ -96,5 +95,22 @@ public abstract class PetSteps {
             .queryParam("status", status.getStatus())
             .get(PetEndPoints.FIND_PETS_BY_STATUS);
         return response.as(Pet[].class);
+    }
+
+    @Step("Использование некорректного body при добавлении питомца")
+    public static void addPetWrongBody() {
+        Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(500));
+        given()
+            .body("[]")
+            .when()
+            .post(PetEndPoints.ADD_PET);
+    }
+
+    @Step("Добавление питомца используя некорректный http метод")
+    public static void addPetWrongHttpMethod() {
+        Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(405));
+        given()
+            .when()
+            .get(PetEndPoints.ADD_PET);
     }
 }

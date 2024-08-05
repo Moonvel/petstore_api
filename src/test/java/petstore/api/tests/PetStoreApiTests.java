@@ -110,19 +110,12 @@ public class PetStoreApiTests {
     @Test
     @Description("Использование некорректного body при добавлении питомца")
     public void addPetWrongBodyTest() {
-        Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(500));
-        given()
-                .body("[]")
-                .when()
-                .post(PetEndPoints.ADD_PET);
+        PetSteps.addPetWrongBody();
     }
 
     @Test
-    public void addPetWrongHttpMethodeTest() {
-        Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(405));
-        given()
-                .when()
-                .get(PetEndPoints.ADD_PET);
+    public void addPetWrongHttpMethodTest() {
+        PetSteps.addPetWrongHttpMethod();
     }
 
 }

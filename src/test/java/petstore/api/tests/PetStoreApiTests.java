@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import static petstore.api.tools.Specifications.requestSpec;
 import static petstore.api.tools.Specifications.requestSpecMultiPart;
-import static petstore.api.tools.Specifications.requestSpecUrlenc;
 import static petstore.api.tools.Specifications.responseSpecError;
 import static petstore.api.tools.Specifications.responseSpecOK200;
 
@@ -30,8 +29,10 @@ import static petstore.api.tools.Specifications.responseSpecOK200;
 public class PetStoreApiTests {
 
     public static final String baseUrl = "https://petstore.swagger.io/v2";
+    public static final String imagePath = "src/test/resources/hhSmile.jpg";
     public static final Long responseTime = 4000L;
     private static Pet pet = PetFabric.defaultPet();
+    
 
 
     @Test
@@ -79,14 +80,8 @@ public class PetStoreApiTests {
     @Test
     @Order(5)
     @Description("Загрузить изображение питомца по id")
-    public void uploadPetImageTest() {
-        Specifications.installSpecification(requestSpecMultiPart(baseUrl),
-                responseSpecOK200(responseTime));
-        given()
-                .baseUri("https://petstore.swagger.io/v2")
-                .multiPart(new File("src/test/resources/hhSmile.jpg"))
-                .when()
-                .post(PetEndPoints.UPLOAD_AN_IMAGE, pet.getId());
+    public void uploadAnImageTest() {
+        PetSteps.uploadAnImageTest(pet.getId(), imagePath);
     }
 
     @Test

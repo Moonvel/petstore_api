@@ -2,6 +2,7 @@ package petstore.api.tests;
 
 import io.restassured.response.Response;
 import jdk.jfr.Description;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -37,7 +38,6 @@ public class PetStoreApiTests {
     @Order(1)
     @Description("Добавление нового питомца")
     public void addNewPetTest() {
-        Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
         PetSteps.addPet(pet);
     }
 
@@ -45,7 +45,6 @@ public class PetStoreApiTests {
     @Order(2)
     @Description("Поиск и сравнение питомца созданного в первом тесте")
     public void findPetByIdTest() {
-        Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
         PetSteps.addPet(pet);
         Pet receivedPet = PetSteps.findPet(pet.getId());
         assertThat(pet)
@@ -56,25 +55,25 @@ public class PetStoreApiTests {
     @Order(3)
     @Description("Обновление существующего питомца")
     public void updatingPetTest() {
-        Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
         PetSteps.addPet(pet);
         pet.setStatus(Status.SOLD.getStatus());
         PetSteps.updatingPet(pet);
-        Pet changedPet = PetSteps.findPet(pet.getId());
-        assertThat(changedPet.getStatus())
+        Pet receivedPet = PetSteps.findPet(pet.getId());
+        assertThat(receivedPet.getStatus())
                 .isEqualTo(Status.SOLD.getStatus());
     }
 
     @Test
     @Order(4)
     @Description("Обновление питомца в магазине через форму")
-    public void updatesPetWithFormDataTest() {
-        Specifications.installSpecification(requestSpecUrlenc(baseUrl), responseSpecOK200(responseTime));
-        given()
-                .formParam("name", "changed")
-                .formParam("status", "dead")
-                .when()
-                .post(PetEndPoints.UPDATES_PET_WITH_FORM_DATA, 111);
+    public void updatesPetNameAndStatusWithFormDataTest() {
+        String newName = "changed";
+        Status newStatus = Status.SOLD;
+        PetSteps.addPet(pet);
+        PetSteps.updatesPetNameAndStatusWithFormData(pet.getId(), newName, newStatus);
+        Pet receivedPet = PetSteps.findPet(pet.getId());
+        Assertions.assertThat(receivedPet.getName()).isEqualTo(newName);
+        Assertions.assertThat(receivedPet.getStatus()).isEqualTo(newStatus.getStatus());
     }
 
     @Test

@@ -11,7 +11,7 @@ import static io.restassured.RestAssured.given;
 import static petstore.api.spec.Specifications.requestSpec;
 import static petstore.api.spec.Specifications.responseSpecOK200;
 
-public class UserSteps {
+public abstract class UserSteps {
 
 	public static final String baseUrl = "https://petstore.swagger.io/v2";
 	public static final Long responseTime = 4000L;

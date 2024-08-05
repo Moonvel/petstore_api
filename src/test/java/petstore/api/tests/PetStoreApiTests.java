@@ -1,6 +1,5 @@
 package petstore.api.tests;
 
-import io.restassured.response.Response;
 import jdk.jfr.Description;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Order;
@@ -12,15 +11,9 @@ import petstore.api.dto.pet.Pet;
 import petstore.api.dto.pet.Status;
 import petstore.api.steps.PetSteps;
 import petstore.api.test_data.PetFabric;
-import petstore.api.tools.PetEndPoints;
-import petstore.api.tools.Specifications;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import static petstore.api.tools.Specifications.requestSpec;
-import static petstore.api.tools.Specifications.responseSpecError;
-import static petstore.api.tools.Specifications.responseSpecOK200;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class PetStoreApiTests {

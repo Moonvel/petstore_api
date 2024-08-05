@@ -1,41 +1,19 @@
 package petstore.api.dto.pet;
 
-import java.util.ArrayList;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder(setterPrefix = "set")
+@Getter
+@Setter
 public class Pet {
-
     private long id;
     private Category category;
     private String name;
     private List<String> photoUrls;
     private List<TagsItem> tags;
     private String status;
-
-    public static Pet defaultPet() {
-        Category hedgehog = Category.builder().id(7).name("Ежи").build();
-        TagsItem thorny = TagsItem.builder().id(2).name("Колючие").build();
-        List<TagsItem> tags = new ArrayList<>();
-        tags.add(thorny);
-        List<String> urls = new ArrayList<>(List.of("https://some-url.com"));
-
-        return Pet
-                .builder()
-                .id(111)
-                .category(hedgehog)
-                .name("Курва Ежик")
-                .photoUrls(urls)
-                .tags(tags)
-                .status("available")
-                .build();
-    }
 }

@@ -1,17 +1,12 @@
 package petstore.api.dto.pet;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
+@Builder(setterPrefix = "set")
+@Getter
 public class TagsItem {
-
-  private int id;
-  private String name;
-
+    private int id;
+    private String name;
 }

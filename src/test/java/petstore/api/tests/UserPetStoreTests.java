@@ -3,7 +3,6 @@ package petstore.api.tests;
 import jdk.jfr.Description;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import petstore.api.dto.user.User;
 import petstore.api.steps.UserSteps;
@@ -12,6 +11,7 @@ import java.util.List;
 
 public class UserPetStoreTests {
   User user;
+
 
   @BeforeEach
   public void setUp() {

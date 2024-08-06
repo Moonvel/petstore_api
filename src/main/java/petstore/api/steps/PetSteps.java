@@ -25,6 +25,7 @@ public abstract class PetSteps {
     public static final String baseUrl = propsHelper.getProperty("baseUrl");
     public static final Long responseTime = 10000L;
 
+    @SneakyThrows
     @Step("Добавление питомца")
     public static void addPet(Pet pet) {
         Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
@@ -34,6 +35,19 @@ public abstract class PetSteps {
                 .post(PetEndPoints.ADD_PET)
                 .then()
                 .statusCode(200);
+
+        int attempts = 0;
+        Response response;
+        while (attempts < 5) { // Максимум 5 попыток
+            response = given()
+                    .when()
+                    .get(PetEndPoints.FIND_PET, pet.getId());
+            if (response.getStatusCode() == 200) {
+                break;
+            }
+            Thread.sleep(1000); // Задержка в 1 секунду между попытками
+            attempts++;
+        }
     }
 
     @Step("Поиск питомца")
@@ -41,7 +55,7 @@ public abstract class PetSteps {
         Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
         return given()
                 .when()
-            .get(PetEndPoints.FIND_PET, petId)
+                .get(PetEndPoints.FIND_PET, petId)
                 .as(Pet.class);
     }
 

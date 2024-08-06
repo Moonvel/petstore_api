@@ -14,6 +14,7 @@ public class Specifications {
     // region RequestSpecification
     private static RequestSpecBuilder getDefaultSpec(String url) {
         return new RequestSpecBuilder()
+                .setAccept(ContentType.JSON)
                 .setBaseUri(url);
     }
 
@@ -21,23 +22,18 @@ public class Specifications {
     public static RequestSpecification requestSpec(String url) {
         return getDefaultSpec(url)
                 .setContentType(ContentType.JSON)
-                .setAccept(ContentType.JSON)
                 .build();
     }
 
     public static RequestSpecification requestSpecMultiPart(String url) {
-        return new RequestSpecBuilder()
-                .setBaseUri(url)
+        return getDefaultSpec(url)
                 .setContentType(ContentType.MULTIPART)
-                .setAccept(ContentType.JSON)
                 .build();
     }
 
     public static RequestSpecification requestSpecUrlenc(String url) {
-        return new RequestSpecBuilder()
-                .setBaseUri(url)
+        return getDefaultSpec(url)
                 .setContentType(ContentType.URLENC)
-                .setAccept(ContentType.JSON)
                 .build();
     }
     // endregion

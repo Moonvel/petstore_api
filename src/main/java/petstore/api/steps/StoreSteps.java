@@ -18,14 +18,24 @@ public class StoreSteps {
 	public static final String baseUrl = propsHelper.getProperty("baseUrl");
 	public static final Long responseTime = 10000L;
 
+	static Gson gson = GsonProvider.getGson();
+
 
 	public static StoreOrder getStoreOrder(int orderId) {
 		installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
 		Response response = given().when()
 								   .get(StoreEndPoints.ORDER, orderId);
-		Gson gson = GsonProvider.getGson();
+
 		return gson.fromJson(response.getBody()
 									 .asString(), StoreOrder.class);
 	}
+
+	public static void placeOrder(StoreOrder order) {
+		installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+		given().body(gson.toJson(order))
+			   .when()
+			   .post(StoreEndPoints.PLACE_ORDER);
 	}
+
+}
 

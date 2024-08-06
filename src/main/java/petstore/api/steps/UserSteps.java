@@ -60,10 +60,10 @@ public abstract class UserSteps {
  		 */
 		int attempts = 0;
 		User recievedUser = null;
-		while (attempts < 3) {
+		while (attempts < 5) {
 			recievedUser = UserSteps.getUserByUserName(user.getUsername());
-			if (recievedUser.getUsername()
-							.equals(user.getUsername())) {
+			if (recievedUser
+							.equals(user)) {
 				break;
 			}
 			Thread.sleep(1000);

@@ -3,6 +3,7 @@ package petstore.api.tests;
 import jdk.jfr.Description;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import petstore.api.dto.user.User;
 import petstore.api.steps.UserSteps;
@@ -43,7 +44,7 @@ public class UserPetStoreTests {
   @Test
   @Description("Обновление пользователя")
   public void updateUserTest() {
-    String newFirstName = "changed";
+    String newFirstName = "nameWasChanged";
     user.setFirstName(newFirstName);
     User recievedUser = UserSteps.updateUser(user);
     Assertions.assertThat(recievedUser.getFirstName())

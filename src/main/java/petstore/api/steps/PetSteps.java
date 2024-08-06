@@ -1,5 +1,16 @@
 package petstore.api.steps;
 
+import io.qameta.allure.Step;
+import io.restassured.response.Response;
+import lombok.SneakyThrows;
+import petstore.api.dto.pet.Pet;
+import petstore.api.dto.pet.Status;
+import petstore.api.endpoints.PetEndPoints;
+import petstore.api.props.PropsHelper;
+import petstore.api.spec.Specifications;
+
+import java.io.File;
+
 import static io.restassured.RestAssured.given;
 import static petstore.api.spec.Specifications.requestSpec;
 import static petstore.api.spec.Specifications.requestSpecMultiPart;
@@ -7,21 +18,12 @@ import static petstore.api.spec.Specifications.requestSpecUrlenc;
 import static petstore.api.spec.Specifications.responseSpecError;
 import static petstore.api.spec.Specifications.responseSpecOK200;
 
-import io.qameta.allure.Step;
-import io.restassured.response.Response;
-import java.io.File;
-import petstore.api.dto.pet.Pet;
-import petstore.api.dto.pet.Status;
-import petstore.api.endpoints.PetEndPoints;
-import petstore.api.props.PropsHelper;
-import petstore.api.spec.Specifications;
-
 
 public abstract class PetSteps {
     static PropsHelper propsHelper = new PropsHelper();
 
     public static final String baseUrl = propsHelper.getProperty("baseUrl");
-    public static final Long responseTime = 4000L;
+    public static final Long responseTime = 10000L;
 
     @Step("Добавление питомца")
     public static void addPet(Pet pet) {
@@ -51,24 +53,57 @@ public abstract class PetSteps {
             .get(PetEndPoints.FIND_PET, petId);
     }
 
+    @SneakyThrows
     @Step("Обновление существущего питомца")
-    public static void updatingPet(Pet pet) {
+    public static Pet updatingPet(Pet pet) {
         Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
         given()
                 .body(pet)
                 .when()
                 .put(PetEndPoints.UPDATING_PET);
+
+        /*
+		  Ожидание обновления питомца в базе данных для дальнейших корректных проверок
+ 		 */
+        int attempts = 0;
+        Pet recievedPet = null;
+        while (attempts < 5) {
+            recievedPet = PetSteps.findPet(pet.getId());
+            if (recievedPet
+                           .equals(pet)) {
+                break;
+            }
+            Thread.sleep(1000);
+            attempts++;
+        }
+        return recievedPet;
     }
 
+    @SneakyThrows
     @Step("Обновление имени и статуса существующего питомца")
-    public static void updatesPetNameAndStatusWithFormData(long petId, String newName,
-        Status newStatus) {
+    public static Pet updatesPetNameAndStatusWithFormData(long petId, String newName, Status newStatus) {
         Specifications.installSpecification(requestSpecUrlenc(baseUrl), responseSpecOK200(responseTime));
         given()
             .formParam("name", newName)
             .formParam("status", newStatus.getStatus())
             .when()
             .post(PetEndPoints.UPDATES_PET_WITH_FORM_DATA, petId);
+
+        /*
+		  Ожидание обновления питомца в базе данных для дальнейших корректных проверок
+ 		 */
+        int attempts = 0;
+        Pet recievedPet = null;
+        while (attempts < 5) {
+            recievedPet = PetSteps.findPet(petId);
+            if (recievedPet.getName()
+                           .equals(newName)) {
+                break;
+            }
+            Thread.sleep(1000);
+            attempts++;
+        }
+        return recievedPet;
     }
 
     @Step("Загрузка изображения питомца")

@@ -38,7 +38,7 @@ public class User {
   public static User noNameUser() {
     return User.builder()
 				.setId(112)
-				.setUsername("NoName")
+				.setUsername("noName")
 				.build();
   }
 }

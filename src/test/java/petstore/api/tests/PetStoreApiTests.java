@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PetStoreApiTests {
 
+
     public static final String baseUrl = "https://petstore.swagger.io/v2";
     public static final String imagePath = "src/test/resources/hhSmile.jpg";
     public static final Long responseTime = 10000L;

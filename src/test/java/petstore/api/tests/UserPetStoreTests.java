@@ -2,18 +2,20 @@ package petstore.api.tests;
 
 import jdk.jfr.Description;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import petstore.api.dto.user.User;
 import petstore.api.steps.UserSteps;
 
 import java.util.List;
 
-@TestMethodOrder(OrderAnnotation.class)
 public class UserPetStoreTests {
+  User user;
 
-  private static User user = User.defaultUser();
+  @BeforeEach
+  public void setUp() {
+    user = User.defaultUser();
+  }
 
   @Test
   @Description("Создание пользователя")
@@ -37,11 +39,15 @@ public class UserPetStoreTests {
     UserSteps.createUsersWithList(users);
   }
 
+
   @Test
   @Description("Обновление пользователя")
   public void updateUserTest() {
-    user.setUserStatus(2);
-    UserSteps.updateUser(user);
+    String newFirstName = "changed";
+    user.setFirstName(newFirstName);
+    User recievedUser = UserSteps.updateUser(user);
+    Assertions.assertThat(recievedUser.getFirstName())
+              .isEqualTo(newFirstName);
   }
 
 }

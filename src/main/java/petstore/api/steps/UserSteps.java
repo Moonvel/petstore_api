@@ -1,6 +1,7 @@
 package petstore.api.steps;
 
 import io.qameta.allure.Step;
+import lombok.SneakyThrows;
 import petstore.api.dto.user.User;
 import petstore.api.endpoints.UserEndPoints;
 import petstore.api.props.PropsHelper;
@@ -16,7 +17,7 @@ public abstract class UserSteps {
 	static PropsHelper propsHelper = new PropsHelper();
 
 	public static final String baseUrl = propsHelper.getProperty("baseUrl");
-	public static final Long responseTime = 4000L;
+	public static final Long responseTime = 10000L;
 
 	@Step("Создание пользователя")
 	public static void createUser(User user) {
@@ -45,12 +46,29 @@ public abstract class UserSteps {
 				.post(UserEndPoints.CREATE_USERS_WITH_LIST);
 	}
 
+	@SneakyThrows
 	@Step("Обновление пользователя")
-	public static void updateUser(User user) {
+	public static User updateUser(User user) {
 		Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
 		given()
 				.body(user)
 				.when()
 				.put(UserEndPoints.UPDATE_USER, user.getUsername());
+
+		/*
+		  Ожидание обновления пользователя в базе данных для дальнейших корректных проверок
+ 		 */
+		int attempts = 0;
+		User recievedUser = null;
+		while (attempts < 3) {
+			recievedUser = UserSteps.getUserByUserName(user.getUsername());
+			if (recievedUser.getUsername()
+							.equals(user.getUsername())) {
+				break;
+			}
+			Thread.sleep(1000);
+			attempts++;
+		}
+		return recievedUser;
 	}
 }

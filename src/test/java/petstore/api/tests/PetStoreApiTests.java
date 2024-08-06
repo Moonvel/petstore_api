@@ -35,7 +35,7 @@ public class PetStoreApiTests {
     @Description("Поиск и сравнение питомца созданного в первом тесте")
     public void findPetByIdTest() {
         PetSteps.addPet(pet);
-        Pet receivedPet = PetSteps.findPet(pet.getId());
+        Pet receivedPet = PetSteps.findPet(pet.getId()).as(Pet.class);
         assertThat(pet)
                 .isEqualTo(receivedPet);
     }

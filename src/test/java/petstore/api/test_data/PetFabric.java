@@ -26,7 +26,7 @@ public abstract class PetFabric {
         List<String> urls = List.of("https://some-url.com");
 
         return Pet.builder()
-                .setId(111)
+                .setId(112)
                 .setCategory(hedgehog)
                 .setName("Курва Ежик")
                 .setPhotoUrls(urls)

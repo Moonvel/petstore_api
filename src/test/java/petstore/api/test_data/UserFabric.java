@@ -2,7 +2,7 @@ package petstore.api.test_data;
 
 import petstore.api.dto.user.User;
 
-public class UserFabric {
+public abstract class UserFabric {
 	public static User defaultUser() {
 	  return User.builder()
 				  .setId(111)

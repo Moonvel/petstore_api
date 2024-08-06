@@ -52,4 +52,23 @@ public class UserPetStoreTests {
               .isEqualTo(newFirstName);
   }
 
+  @Test
+  @Description("Удаление пользователя")
+  public void deleteUserTest() {
+    UserSteps.createUser(user);
+    UserSteps.deleteUser(user.getUsername());
+  }
+
+  @Test
+  @Description("Login")
+  public void loginTest() {
+    UserSteps.login(user.getUsername(), user.getPassword());
+  }
+
+  @Test
+  @Description("Logout")
+  public void logoutTest() {
+    UserSteps.logout();
+  }
+
 }

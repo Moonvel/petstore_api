@@ -32,16 +32,13 @@ public abstract class PetSteps {
         given()
                 .body(pet)
                 .when()
-                .post(PetEndPoints.ADD_PET)
-                .then()
-                .statusCode(200);
+                .post(PetEndPoints.ADD_PET);
+
 
         int attempts = 0;
         Response response;
         while (attempts < 5) {
-            response = given()
-                    .when()
-                    .get(PetEndPoints.FIND_PET, pet.getId());
+            response = findPet(pet.getId());
             if (response.getStatusCode() == 200) {
                 break;
             }
@@ -51,12 +48,11 @@ public abstract class PetSteps {
     }
 
     @Step("Поиск питомца")
-    public static Pet findPet(long petId) {
+    public static Response findPet(long petId) {
         Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
         return given()
                 .when()
-                .get(PetEndPoints.FIND_PET, petId)
-                .as(Pet.class);
+                .get(PetEndPoints.FIND_PET, petId);
     }
 
     @Step("Поиск несуществующего питомца")
@@ -82,7 +78,7 @@ public abstract class PetSteps {
         int attempts = 0;
         Pet recievedPet = null;
         while (attempts < 5) {
-            recievedPet = PetSteps.findPet(pet.getId());
+            recievedPet = PetSteps.findPet(pet.getId()).as(Pet.class);
             if (recievedPet
                            .equals(pet)) {
                 break;
@@ -109,7 +105,7 @@ public abstract class PetSteps {
         int attempts = 0;
         Pet recievedPet = null;
         while (attempts < 5) {
-            recievedPet = PetSteps.findPet(petId);
+            recievedPet = PetSteps.findPet(petId).as(Pet.class);
             if (recievedPet.getName()
                            .equals(newName)) {
                 break;

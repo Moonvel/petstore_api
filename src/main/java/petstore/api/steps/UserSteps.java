@@ -10,7 +10,9 @@ import petstore.api.spec.Specifications;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static petstore.api.spec.Specifications.installSpecification;
 import static petstore.api.spec.Specifications.requestSpec;
+import static petstore.api.spec.Specifications.requestSpecUrlenc;
 import static petstore.api.spec.Specifications.responseSpecOK200;
 
 public abstract class UserSteps {
@@ -70,5 +72,28 @@ public abstract class UserSteps {
 			attempts++;
 		}
 		return recievedUser;
+	}
+
+	@Step("Удаление пользователя")
+	public static void deleteUser(String username) {
+		installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+		given().when()
+			   .delete(UserEndPoints.DELETE_USER, username);
+	}
+
+	@Step("Login")
+	public static void login(String userName, String passWord) {
+		installSpecification(requestSpecUrlenc(baseUrl), responseSpecOK200(responseTime));
+		given().formParam("username", userName)
+			   .formParam("password", passWord)
+			   .when()
+			   .get(UserEndPoints.LOGIN);
+	}
+
+	@Step("Logout")
+	public static void logout() {
+		installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+		given().when()
+			   .get(UserEndPoints.LOGOUT);
 	}
 }

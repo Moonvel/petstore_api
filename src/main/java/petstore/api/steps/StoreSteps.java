@@ -1,6 +1,9 @@
 package petstore.api.steps;
 
+import com.google.gson.Gson;
 import io.restassured.response.Response;
+import petstore.api.dto.adapters_gson.GsonProvider;
+import petstore.api.dto.store.StoreOrder;
 import petstore.api.endpoints.StoreEndPoints;
 import petstore.api.props.PropsHelper;
 
@@ -15,9 +18,14 @@ public class StoreSteps {
 	public static final String baseUrl = propsHelper.getProperty("baseUrl");
 	public static final Long responseTime = 10000L;
 
-	public static Response getStoreOrder(int orderId) {
+
+	public static StoreOrder getStoreOrder(int orderId) {
 		installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-		return given().when()
-			   .get(StoreEndPoints.ORDER, orderId);
+		Response response = given().when()
+								   .get(StoreEndPoints.ORDER, orderId);
+		Gson gson = GsonProvider.getGson();
+		return gson.fromJson(response.getBody()
+									 .asString(), StoreOrder.class);
 	}
-}
+	}
+

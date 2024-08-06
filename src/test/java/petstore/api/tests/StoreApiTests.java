@@ -9,8 +9,7 @@ public class StoreApiTests {
 	@Test
 	@Description("Получение инвентаря магазина")
 	public void getStoreOrderTest() {
-		StoreOrder store = StoreSteps.getStoreOrder(1)
-									 .as(StoreOrder.class);
+		StoreOrder store = StoreSteps.getStoreOrder(1);
 	}
 
 }

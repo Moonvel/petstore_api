@@ -38,14 +38,14 @@ public abstract class PetSteps {
 
         int attempts = 0;
         Response response;
-        while (attempts < 5) { // Максимум 5 попыток
+        while (attempts < 5) {
             response = given()
                     .when()
                     .get(PetEndPoints.FIND_PET, pet.getId());
             if (response.getStatusCode() == 200) {
                 break;
             }
-            Thread.sleep(1000); // Задержка в 1 секунду между попытками
+            Thread.sleep(1000);
             attempts++;
         }
     }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import petstore.api.dto.user.User;
 import petstore.api.steps.UserSteps;
+import petstore.api.test_data.UserFabric;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class UserPetStoreTests {
 
   @BeforeEach
   public void setUp() {
-    user = User.defaultUser();
+    user = UserFabric.defaultUser();
   }
 
   @Test
@@ -36,7 +37,7 @@ public class UserPetStoreTests {
   @Test
   @Description("Создание списка пользователей")
   public void createUsersWithListTest() {
-    List<User> users = List.of(User.defaultUser(), User.noNameUser());
+    List<User> users = List.of(UserFabric.defaultUser(), UserFabric.noNameUser());
     UserSteps.createUsersWithList(users);
   }
 

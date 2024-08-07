@@ -1,7 +1,7 @@
 package petstore.api.tests;
 
 import jdk.jfr.Description;
-import org.assertj.core.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,12 +17,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PetStoreApiTests {
     static PropsHelper propsHelper = new PropsHelper();
     public static final String imagePath = propsHelper.getProperty("testImg");
-    Pet pet;
+    Pet pet; Pet changedPet;
+
+    SoftAssertions softAssertions = new SoftAssertions();
 
 
     @BeforeEach
     public void setUp() {
         pet = PetFabric.defaultPet();
+        changedPet = PetFabric.changedPet();
     }
 
     @Test
@@ -44,10 +47,8 @@ public class PetStoreApiTests {
     @Description("Обновление существующего питомца")
     public void updatePetTest() {
         PetSteps.addPet(pet);
-        pet.setStatus(Status.SOLD.getStatus());
-        Pet receivedPet = PetSteps.updatingPet(pet);
-        assertThat(receivedPet.getStatus())
-                .isEqualTo(Status.SOLD.getStatus());
+        Pet receivedPet = PetSteps.updatingPet(changedPet);
+        assertThat(pet).isEqualTo(receivedPet);
     }
 
     @Test
@@ -56,9 +57,11 @@ public class PetStoreApiTests {
         String newName = "changed";
         Status newStatus = Status.SOLD;
         PetSteps.addPet(pet);
-        Pet receivedPet = PetSteps.updatesPetNameAndStatusWithFormData(pet.getId(), newName, newStatus);
-        Assertions.assertThat(receivedPet.getName()).isEqualTo(newName);
-        Assertions.assertThat(receivedPet.getStatus()).isEqualTo(newStatus.getStatus());
+        PetSteps.updatesPetNameAndStatusWithFormData(pet.getId(), newName, newStatus);
+        Pet recievedPet = PetSteps.findPet(pet.getId()).as(Pet.class);
+        softAssertions.assertThat(recievedPet.getName()).isEqualTo(newName);
+        softAssertions.assertThat(recievedPet.getStatus()).isEqualTo(newStatus.getStatus());
+        softAssertions.assertAll();
     }
 
     @Test

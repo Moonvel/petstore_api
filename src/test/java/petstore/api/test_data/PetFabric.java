@@ -26,12 +26,38 @@ public abstract class PetFabric {
         List<String> urls = List.of("https://some-url.com");
 
         return Pet.builder()
-                .setId(112)
+                .setId(115)
                 .setCategory(hedgehog)
                 .setName("Курва Ежик")
                 .setPhotoUrls(urls)
                 .setTags(tags)
                 .setStatus(Status.AVAILABLE.getStatus())
                 .build();
+    }
+
+    public static Pet changedPet() {
+        // ToDo перенести
+        Category hedgehog = Category.builder()
+                                    .setId(8)
+                                    .setName("Ежи changed")
+                                    .build();
+
+        // ToDo перенести
+        TagsItem thorny = TagsItem.builder()
+                                  .setId(3)
+                                  .setName("Колючие changed")
+                                  .build();
+
+        List<TagsItem> tags = List.of(thorny);
+        List<String> urls = List.of("https://some-url.com/changed");
+
+        return Pet.builder()
+                  .setId(112)
+                  .setCategory(hedgehog)
+                  .setName("Курва changed")
+                  .setPhotoUrls(urls)
+                  .setTags(tags)
+                  .setStatus(Status.SOLD.getStatus())
+                  .build();
     }
 }

@@ -41,15 +41,12 @@ public class UserPetStoreTests {
     UserSteps.createUsersWithList(users);
   }
 
-
-  @Test
   @Description("Обновление пользователя")
   public void updateUserTest() {
     String newFirstName = "nameWasChanged";
     user.setFirstName(newFirstName);
     User recievedUser = UserSteps.updateUser(user);
-    Assertions.assertThat(recievedUser.getFirstName())
-              .isEqualTo(newFirstName);
+    Assertions.assertThat(recievedUser.getFirstName()).isEqualTo(newFirstName);
   }
 
   @Test

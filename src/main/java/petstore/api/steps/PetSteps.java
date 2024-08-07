@@ -3,6 +3,7 @@ package petstore.api.steps;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
+import org.awaitility.Awaitility;
 import petstore.api.dto.pet.Pet;
 import petstore.api.dto.pet.Status;
 import petstore.api.endpoints.PetEndPoints;
@@ -10,6 +11,7 @@ import petstore.api.props.PropsHelper;
 import petstore.api.spec.Specifications;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
 import static petstore.api.spec.Specifications.requestSpec;
@@ -34,18 +36,16 @@ public abstract class PetSteps {
                 .when()
                 .post(PetEndPoints.ADD_PET);
 
-
-        int attempts = 0;
-        Response response;
-        while (attempts < 5) {
-            response = findPet(pet.getId());
-            if (response.getStatusCode() == 200) {
-                break;
-            }
-            Thread.sleep(1000);
-            attempts++;
-        }
+        Awaitility.await()
+                  .atMost(20, TimeUnit.SECONDS)
+                  .pollInterval(500, TimeUnit.MILLISECONDS)
+                  .until(() -> {
+                      Pet recievedPet = PetSteps.findPet(pet.getId())
+                                                .as(Pet.class);
+                      return recievedPet.equals(pet);
+                  });
     }
+
 
     @Step("Поиск питомца")
     public static Response findPet(long petId) {
@@ -73,25 +73,23 @@ public abstract class PetSteps {
                 .put(PetEndPoints.UPDATING_PET);
 
         /*
-		  Ожидание обновления питомца в базе данных для дальнейших корректных проверок
+		  Ожидание обновления пользователя в базе данных для дальнейших корректных проверок
  		 */
-        int attempts = 0;
-        Pet recievedPet = null;
-        while (attempts < 5) {
-            recievedPet = PetSteps.findPet(pet.getId()).as(Pet.class);
-            if (recievedPet
-                           .equals(pet)) {
-                break;
-            }
-            Thread.sleep(1000);
-            attempts++;
-        }
-        return recievedPet;
+        Awaitility.await()
+                  .atMost(20, TimeUnit.SECONDS)
+                  .pollInterval(500, TimeUnit.MILLISECONDS)
+                  .until(() -> {
+                      Pet recievedPet = PetSteps.findPet(pet.getId())
+                                                .as(Pet.class);
+                      return recievedPet.equals(pet);
+                  });
+        return PetSteps.findPet(pet.getId())
+                       .as(Pet.class);
     }
 
     @SneakyThrows
     @Step("Обновление имени и статуса существующего питомца")
-    public static Pet updatesPetNameAndStatusWithFormData(long petId, String newName, Status newStatus) {
+    public static void updatesPetNameAndStatusWithFormData(long petId, String newName, Status newStatus) {
         Specifications.installSpecification(requestSpecUrlenc(baseUrl), responseSpecOK200(responseTime));
         given()
             .formParam("name", newName)
@@ -102,18 +100,15 @@ public abstract class PetSteps {
         /*
 		  Ожидание обновления питомца в базе данных для дальнейших корректных проверок
  		 */
-        int attempts = 0;
-        Pet recievedPet = null;
-        while (attempts < 5) {
-            recievedPet = PetSteps.findPet(petId).as(Pet.class);
-            if (recievedPet.getName()
-                           .equals(newName)) {
-                break;
-            }
-            Thread.sleep(1000);
-            attempts++;
-        }
-        return recievedPet;
+        Awaitility.await()
+                  .atMost(10, TimeUnit.SECONDS)
+                  .pollInterval(500, TimeUnit.MILLISECONDS)
+                  .until(() -> {
+                      Pet recievedPet = PetSteps.findPet(petId)
+                                                .as(Pet.class);
+                      return recievedPet.getName()
+                                        .equals(newName);
+                  });
     }
 
     @Step("Загрузка изображения питомца")

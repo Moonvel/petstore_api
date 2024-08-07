@@ -80,6 +80,11 @@
             <artifactId>allure-junit5</artifactId>
             <version>${allure-junit5}</version>
         </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>4.2.2</version>
+        </dependency>
     </dependencies>
 
     <build>

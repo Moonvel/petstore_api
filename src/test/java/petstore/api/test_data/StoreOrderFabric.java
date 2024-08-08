@@ -2,7 +2,8 @@ package petstore.api.test_data;
 
 import petstore.api.dto.store.StoreOrder;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public abstract class StoreOrderFabric {
 
@@ -11,7 +12,7 @@ public abstract class StoreOrderFabric {
 						 .setId(5)
 						 .setPetId(112)
 						 .setQuantity(2)
-						 .setShipDate(ZonedDateTime.now())
+						 .setShipDate(Instant.now().truncatedTo(ChronoUnit.MILLIS))
 						 .setComplete(true)
 						 .setStatus("test")
 						 .build();

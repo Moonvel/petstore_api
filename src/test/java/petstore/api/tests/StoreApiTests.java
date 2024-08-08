@@ -1,7 +1,6 @@
 package petstore.api.tests;
 
 import jdk.jfr.Description;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import petstore.api.dto.store.StoreOrder;
 import petstore.api.steps.StoreSteps;
@@ -11,14 +10,14 @@ import static petstore.api.test_data.StoreOrderFabric.defaultStoreOrder;
 
 public class StoreApiTests {
 
-	@Disabled
+
 	@Test
 	@Description("Получение заказа")
 	public void getStoreOrderTest() {
 		StoreOrder store = StoreSteps.getStoreOrder(defaultStoreOrder().getId());
 	}
 
-	@Disabled
+
 	@Test
 	@Description("Размещение заказа")
 	public void placeOrderTest() {

@@ -2,10 +2,13 @@ package petstore.api.steps;
 
 import com.google.gson.Gson;
 import io.restassured.response.Response;
+import org.awaitility.Awaitility;
 import petstore.api.dto.adapters_gson.GsonProvider;
 import petstore.api.dto.store.StoreOrder;
 import petstore.api.endpoints.StoreEndPoints;
 import petstore.api.props.PropsHelper;
+
+import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
 import static petstore.api.spec.Specifications.installSpecification;
@@ -21,20 +24,38 @@ public class StoreSteps {
 	static Gson gson = GsonProvider.getGson();
 
 
-	public static StoreOrder getStoreOrder(int orderId) {
+	public static StoreOrder getStoreOrder(StoreOrder order) {
 		installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-		Response response = given().when()
-								   .get(StoreEndPoints.ORDER, orderId);
 
-		return gson.fromJson(response.getBody()
-									 .asString(), StoreOrder.class);
+		final StoreOrder[] receivedStoreOrderHolder = new StoreOrder[1];
+		Awaitility.await()
+				  .atMost(10000, TimeUnit.SECONDS)
+				  .pollDelay(1000, TimeUnit.MILLISECONDS)
+				  .pollInterval(1000, TimeUnit.MILLISECONDS)
+				  .until(() -> {
+					  Response response = given().when()
+												 .get(StoreEndPoints.ORDER, order.getId());
+
+					  StoreOrder receivedStoreOrder = gson.fromJson(response.getBody()
+																			.asString(), StoreOrder.class);
+					  receivedStoreOrderHolder[0] = receivedStoreOrder;
+					  return receivedStoreOrderHolder[0].equals(order);
+				  });
+
+		return receivedStoreOrderHolder[0];
 	}
 
-	public static void placeOrder(StoreOrder order) {
+	public static void placeStoreOrder(StoreOrder order) {
 		installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
 		given().body(gson.toJson(order))
 			   .when()
 			   .post(StoreEndPoints.PLACE_ORDER);
+	}
+
+	public static void deleteStoreOrder(StoreOrder order) {
+		installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+		given().when()
+			   .delete(StoreEndPoints.DELETE_STORE_ORDER, order.getId());
 	}
 
 }

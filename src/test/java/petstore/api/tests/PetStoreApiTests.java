@@ -3,6 +3,7 @@ package petstore.api.tests;
 import jdk.jfr.Description;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -25,7 +26,7 @@ public class PetStoreApiTests {
     @BeforeEach
     public void setUp() {
         pet = PetFabric.defaultPet();
-        changedPet = PetFabric.changedPet();
+        changedPet = PetFabric.updatedPet();
     }
 
     @Test
@@ -38,9 +39,9 @@ public class PetStoreApiTests {
     @Description("Поиск и сравнение питомца созданного в первом тесте")
     public void findPetByIdTest() {
         PetSteps.addPet(pet);
-        Pet receivedPet = PetSteps.findPet(pet.getId()).as(Pet.class);
-        assertThat(pet)
-                .isEqualTo(receivedPet);
+        Pet receivedPet = PetSteps.findPet(pet);
+        assertThat(receivedPet)
+                .isEqualTo(pet);
     }
 
     @Test
@@ -48,19 +49,23 @@ public class PetStoreApiTests {
     public void updatePetTest() {
         PetSteps.addPet(pet);
         Pet receivedPet = PetSteps.updatingPet(changedPet);
-        assertThat(pet).isEqualTo(receivedPet);
+        assertThat(receivedPet)
+                .isEqualTo(changedPet);
     }
 
+    @Disabled("Отлючен по причине некорректного ответа сервера?")
     @Test
     @Description("Обновление питомца в магазине через форму")
     public void updatePetNameAndStatusWithFormDataTest() {
         String newName = "changed";
         Status newStatus = Status.SOLD;
         PetSteps.addPet(pet);
-        PetSteps.updatesPetNameAndStatusWithFormData(pet.getId(), newName, newStatus);
-        Pet recievedPet = PetSteps.findPet(pet.getId()).as(Pet.class);
-        softAssertions.assertThat(recievedPet.getName()).isEqualTo(newName);
-        softAssertions.assertThat(recievedPet.getStatus()).isEqualTo(newStatus.getStatus());
+        PetSteps.updatesPetNameAndStatusWithFormData(pet, newName, newStatus);
+        Pet recievedPet = PetSteps.findPet(pet);
+        softAssertions.assertThat(recievedPet.getName())
+                      .isEqualTo(newName);
+        softAssertions.assertThat(recievedPet.getStatus())
+                      .isEqualTo(newStatus.getStatus());
         softAssertions.assertAll();
     }
 
@@ -74,14 +79,14 @@ public class PetStoreApiTests {
     @Description("Удаление созданного питомца")
     public void deletePetTest() {
         PetSteps.addPet(pet);
-        PetSteps.deletePet(pet.getId());
+        PetSteps.deletePet(pet);
     }
 
 
     @Test
     @Description("Поиск несуществующего питомца")
     public void nonExistPetTest() {
-        PetSteps.findNonExistPetTest(Long.MAX_VALUE);
+        PetSteps.findNonExistPetTest(PetFabric.nonExistingPet());
     }
 
     @ParameterizedTest

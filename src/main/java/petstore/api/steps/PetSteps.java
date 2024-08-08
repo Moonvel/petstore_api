@@ -35,77 +35,72 @@ public abstract class PetSteps {
                 .body(pet)
                 .when()
                 .post(PetEndPoints.ADD_PET);
-
-        Awaitility.await()
-                  .atMost(20, TimeUnit.SECONDS)
-                  .pollInterval(500, TimeUnit.MILLISECONDS)
-                  .until(() -> {
-                      Pet recievedPet = PetSteps.findPet(pet.getId())
-                                                .as(Pet.class);
-                      return recievedPet.equals(pet);
-                  });
     }
 
-
     @Step("Поиск питомца")
-    public static Response findPet(long petId) {
+    public static Pet findPet(Pet pet) {
         Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-        return given()
-                .when()
-                .get(PetEndPoints.FIND_PET, petId);
+
+        final Pet[] receivedPetHolder = new Pet[1];
+        Awaitility.await()
+                  .atMost(10, TimeUnit.SECONDS)
+                  .pollDelay(1000, TimeUnit.MILLISECONDS)
+                  .pollInterval(1000, TimeUnit.MILLISECONDS)
+                  .until(() -> {
+                      Pet recievedPet = given()
+                              .when()
+                              .get(PetEndPoints.FIND_PET, pet.getId())
+                              .as(Pet.class);
+                      receivedPetHolder[0] = recievedPet;
+                      return recievedPet.equals(pet);
+                  });
+
+        return receivedPetHolder[0];
     }
 
     @Step("Поиск несуществующего питомца")
-    public static void findNonExistPetTest(long petId) {
+    public static void findNonExistPetTest(Pet pet) {
         Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(404));
         given()
             .when()
-            .get(PetEndPoints.FIND_PET, petId);
+            .get(PetEndPoints.FIND_PET, pet.getId());
     }
 
     @SneakyThrows
     @Step("Обновление существущего питомца")
     public static Pet updatingPet(Pet pet) {
         Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+
         given()
                 .body(pet)
                 .when()
                 .put(PetEndPoints.UPDATING_PET);
 
-        /*
-		  Ожидание обновления пользователя в базе данных для дальнейших корректных проверок
- 		 */
-        Awaitility.await()
-                  .atMost(20, TimeUnit.SECONDS)
-                  .pollInterval(500, TimeUnit.MILLISECONDS)
-                  .until(() -> {
-                      Pet recievedPet = PetSteps.findPet(pet.getId())
-                                                .as(Pet.class);
-                      return recievedPet.equals(pet);
-                  });
-        return PetSteps.findPet(pet.getId())
-                       .as(Pet.class);
+        return PetSteps.findPet(pet);
     }
 
     @SneakyThrows
     @Step("Обновление имени и статуса существующего питомца")
-    public static void updatesPetNameAndStatusWithFormData(long petId, String newName, Status newStatus) {
+    public static void updatesPetNameAndStatusWithFormData(Pet pet, String newName, Status newStatus) {
+        Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+        findPet(pet);
         Specifications.installSpecification(requestSpecUrlenc(baseUrl), responseSpecOK200(responseTime));
+
         given()
             .formParam("name", newName)
             .formParam("status", newStatus.getStatus())
             .when()
-            .post(PetEndPoints.UPDATES_PET_WITH_FORM_DATA, petId);
+            .post(PetEndPoints.UPDATES_PET_WITH_FORM_DATA, pet.getId());
 
         /*
 		  Ожидание обновления питомца в базе данных для дальнейших корректных проверок
  		 */
         Awaitility.await()
                   .atMost(10, TimeUnit.SECONDS)
-                  .pollInterval(500, TimeUnit.MILLISECONDS)
+                  .pollDelay(1000, TimeUnit.MILLISECONDS)
+                  .pollInterval(1000, TimeUnit.MILLISECONDS)
                   .until(() -> {
-                      Pet recievedPet = PetSteps.findPet(petId)
-                                                .as(Pet.class);
+                      Pet recievedPet = PetSteps.findPet(pet);
                       return recievedPet.getName()
                                         .equals(newName);
                   });
@@ -113,8 +108,7 @@ public abstract class PetSteps {
 
     @Step("Загрузка изображения питомца")
     public static void uploadAnImageTest(long petId, String imagePath) {
-        Specifications.installSpecification(requestSpecMultiPart(baseUrl),
-            responseSpecOK200(responseTime));
+        Specifications.installSpecification(requestSpecMultiPart(baseUrl), responseSpecOK200(responseTime));
         given()
             .multiPart(new File(imagePath))
             .when()
@@ -122,11 +116,19 @@ public abstract class PetSteps {
     }
 
     @Step("Удаление существущего питомца")
-    public static void deletePet(long petId) {
+    public static void deletePet(Pet pet) {
         Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(200));
-        given()
-            .when()
-            .delete(PetEndPoints.DELETE_PET, petId);
+        Awaitility.await()
+                  .atMost(10, TimeUnit.SECONDS)
+                  .pollDelay(1000, TimeUnit.MILLISECONDS)
+                  .pollInterval(1000, TimeUnit.MILLISECONDS)
+                  .until(() -> {
+                      int statusCode = given()
+                              .when()
+                              .delete(PetEndPoints.DELETE_PET, pet.getId())
+                              .getStatusCode();
+                      return statusCode == 200;
+                  });
     }
 
     @Step("Поиск питомцев по статусу")

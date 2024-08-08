@@ -31,13 +31,33 @@ public abstract class UserSteps {
 				.post(UserEndPoints.CREATE_USER);
 	}
 
+//	@Step("Поиск пользователя по username")
+//	public static User getUserByUserName(User user) {
+//		Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
+//		return given()
+//				.when()
+//				.get(UserEndPoints.GET_USER_BY_USERNAME, user.getUsername())
+//				.as(User.class);
+//	}
+
 	@Step("Поиск пользователя по username")
-	public static User getUserByUserName(String userName) {
+	public static User getUserByUserName(User user) {
 		Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-		return given()
-				.when()
-				.get(UserEndPoints.GET_USER_BY_USERNAME, userName)
-				.as(User.class);
+
+		final User[] receivedUserHolder = new User[1];
+		Awaitility.await()
+				  .atMost(10, TimeUnit.SECONDS)
+				  .pollDelay(1000, TimeUnit.MILLISECONDS)
+				  .pollInterval(1000, TimeUnit.MILLISECONDS)
+				  .until(() -> {
+					  User recievedUser = given()
+							  .when()
+							  .get(UserEndPoints.GET_USER_BY_USERNAME, user.getUsername())
+							  .as(User.class);
+					  receivedUserHolder[0] = recievedUser;
+					  return recievedUser.equals(user);
+				  });
+		return receivedUserHolder[0];
 	}
 
 	@Step("Создание списка пользователей")
@@ -57,18 +77,7 @@ public abstract class UserSteps {
 				.when()
 				.put(UserEndPoints.UPDATE_USER, user.getUsername());
 
-		/*
-		  Ожидание обновления пользователя в базе данных для дальнейших корректных проверок
- 		 */
-		Awaitility.await()
-				  .atMost(10, TimeUnit.SECONDS)
-				  .pollInterval(500, TimeUnit.MILLISECONDS)
-				  .until(() -> {
-					  User recievedUser = UserSteps.getUserByUserName(user.getUsername());
-					  return recievedUser.equals(user);
-				  });
-
-		return UserSteps.getUserByUserName(user.getUsername());
+		return UserSteps.getUserByUserName(user);
 
 	}
 

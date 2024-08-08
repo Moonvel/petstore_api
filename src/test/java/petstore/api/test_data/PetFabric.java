@@ -26,7 +26,7 @@ public abstract class PetFabric {
         List<String> urls = List.of("https://some-url.com");
 
         return Pet.builder()
-                .setId(115)
+                  .setId(254)
                 .setCategory(hedgehog)
                 .setName("Курва Ежик")
                 .setPhotoUrls(urls)
@@ -35,7 +35,7 @@ public abstract class PetFabric {
                 .build();
     }
 
-    public static Pet changedPet() {
+    public static Pet updatedPet() {
         // ToDo перенести
         Category hedgehog = Category.builder()
                                     .setId(8)
@@ -52,7 +52,7 @@ public abstract class PetFabric {
         List<String> urls = List.of("https://some-url.com/changed");
 
         return Pet.builder()
-                  .setId(112)
+                  .setId(254)
                   .setCategory(hedgehog)
                   .setName("Курва changed")
                   .setPhotoUrls(urls)
@@ -60,4 +60,12 @@ public abstract class PetFabric {
                   .setStatus(Status.SOLD.getStatus())
                   .build();
     }
+
+    public static Pet nonExistingPet() {
+        return Pet.builder()
+                  .setId(445646654654646L)
+                  .build();
+    }
+
+
 }

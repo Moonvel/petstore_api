@@ -29,7 +29,7 @@ public class UserPetStoreTests {
   @Description("Получение пользователя по username")
   public void getUserByUserNameTest() {
     UserSteps.createUser(user);
-    User recievedUser = UserSteps.getUserByUserName(user.getUsername());
+    User recievedUser = UserSteps.getUserByUserName(user);
     Assertions.assertThat(user)
                 .isEqualTo(recievedUser);
   }

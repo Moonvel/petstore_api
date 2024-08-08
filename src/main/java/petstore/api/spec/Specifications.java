@@ -53,11 +53,13 @@ public class Specifications {
     }
     // endregion
 
-    public static void installSpecification(
-            RequestSpecification request,
-            ResponseSpecification response
+    public static void installSpecification(RequestSpecification request, ResponseSpecification response
     ) {
         RestAssured.requestSpecification = request;
         RestAssured.responseSpecification = response;
+    }
+
+    public static void installSpecification(RequestSpecification request) {
+        RestAssured.requestSpecification = request;
     }
 }

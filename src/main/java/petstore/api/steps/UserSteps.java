@@ -31,14 +31,6 @@ public abstract class UserSteps {
 				.post(UserEndPoints.CREATE_USER);
 	}
 
-//	@Step("Поиск пользователя по username")
-//	public static User getUserByUserName(User user) {
-//		Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-//		return given()
-//				.when()
-//				.get(UserEndPoints.GET_USER_BY_USERNAME, user.getUsername())
-//				.as(User.class);
-//	}
 
 	@Step("Поиск пользователя по username")
 	public static User getUserByUserName(User user) {

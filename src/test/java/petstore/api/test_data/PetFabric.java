@@ -6,17 +6,17 @@ import petstore.api.dto.pet.Status;
 import petstore.api.dto.pet.TagsItem;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class PetFabric {
+    private static Long petId = 254L;
 
     public static Pet defaultPet() {
-        // ToDo перенести
         Category hedgehog = Category.builder()
                 .setId(7)
                 .setName("Ежи")
                 .build();
 
-        // ToDo перенести
         TagsItem thorny = TagsItem.builder()
                 .setId(2)
                 .setName("Колючие")
@@ -26,7 +26,7 @@ public abstract class PetFabric {
         List<String> urls = List.of("https://some-url.com");
 
         return Pet.builder()
-                  .setId(254)
+                .setId(petId++)
                 .setCategory(hedgehog)
                 .setName("Курва Ежик")
                 .setPhotoUrls(urls)
@@ -36,13 +36,11 @@ public abstract class PetFabric {
     }
 
     public static Pet updatedPet() {
-        // ToDo перенести
         Category hedgehog = Category.builder()
                                     .setId(8)
                                     .setName("Ежи changed")
                                     .build();
 
-        // ToDo перенести
         TagsItem thorny = TagsItem.builder()
                                   .setId(3)
                                   .setName("Колючие changed")
@@ -52,7 +50,7 @@ public abstract class PetFabric {
         List<String> urls = List.of("https://some-url.com/changed");
 
         return Pet.builder()
-                  .setId(254)
+                  .setId(petId++)
                   .setCategory(hedgehog)
                   .setName("Курва changed")
                   .setPhotoUrls(urls)

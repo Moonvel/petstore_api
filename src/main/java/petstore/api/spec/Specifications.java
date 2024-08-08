@@ -18,7 +18,6 @@ public class Specifications {
                 .setBaseUri(url);
     }
 
-    // ToDo рефакторинг
     public static RequestSpecification requestSpec(String url) {
         return getDefaultSpec(url)
                 .setContentType(ContentType.JSON)

@@ -1,6 +1,8 @@
 package petstore.api.tests;
 
-import jdk.jfr.Description;
+import io.qameta.allure.Description;
+import io.qameta.allure.Flaky;
+import io.qameta.allure.Owner;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -15,6 +17,7 @@ import petstore.api.test_data.PetFabric;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Owner("Moonvel")
 public class PetStoreApiTests {
     static PropsHelper propsHelper = new PropsHelper();
     public static final String imagePath = propsHelper.getProperty("testImg");
@@ -53,7 +56,8 @@ public class PetStoreApiTests {
                 .isEqualTo(changedPet);
     }
 
-    @Disabled("Отлючен по причине некорректного ответа сервера?")
+    @Disabled
+    @Flaky
     @Test
     @Description("Обновление питомца в магазине через форму")
     public void updatePetNameAndStatusWithFormDataTest() {

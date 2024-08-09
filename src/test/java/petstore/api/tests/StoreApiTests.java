@@ -1,6 +1,7 @@
 package petstore.api.tests;
 
-import jdk.jfr.Description;
+import io.qameta.allure.Description;
+import io.qameta.allure.Owner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import petstore.api.dto.store.StoreOrder;
@@ -8,8 +9,8 @@ import petstore.api.steps.StoreSteps;
 import petstore.api.test_data.StoreOrderFabric;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static petstore.api.test_data.StoreOrderFabric.defaultStoreOrder;
 
+@Owner("Moonvel")
 public class StoreApiTests {
 	static StoreOrder order;
 	@BeforeEach

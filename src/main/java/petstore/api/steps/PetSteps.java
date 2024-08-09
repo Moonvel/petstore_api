@@ -14,11 +14,7 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
-import static petstore.api.spec.Specifications.requestSpec;
-import static petstore.api.spec.Specifications.requestSpecMultiPart;
-import static petstore.api.spec.Specifications.requestSpecUrlenc;
-import static petstore.api.spec.Specifications.responseSpecError;
-import static petstore.api.spec.Specifications.responseSpecOK200;
+import static petstore.api.spec.Specifications.*;
 
 
 public abstract class PetSteps {
@@ -129,7 +125,7 @@ public abstract class PetSteps {
 
     }
 
-    @Step("Поиск питомцев по статусу")
+    @Step("Поиск питомца со статусом {status}")
     public static Pet[] findPetsByStatus(Status status) {
         Specifications.installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
         Response response = given()

@@ -1,6 +1,7 @@
 package petstore.api.tests;
 
-import jdk.jfr.Description;
+import io.qameta.allure.Description;
+import io.qameta.allure.Owner;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import petstore.api.test_data.UserFabric;
 
 import java.util.List;
 
+@Owner("Moonvel")
 public class UserPetStoreTests {
   User user;
 

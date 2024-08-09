@@ -9,7 +9,7 @@ public abstract class StoreOrderFabric {
 
 	public static StoreOrder defaultStoreOrder() {
 		return StoreOrder.builder()
-						 .setId(5)
+						 .setId(6)
 						 .setPetId(112)
 						 .setQuantity(2)
 						 .setShipDate(Instant.now().truncatedTo(ChronoUnit.MILLIS))

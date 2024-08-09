@@ -122,13 +122,11 @@ public abstract class PetSteps {
                   .atMost(10, TimeUnit.SECONDS)
                   .pollDelay(1000, TimeUnit.MILLISECONDS)
                   .pollInterval(1000, TimeUnit.MILLISECONDS)
-                  .until(() -> {
-                      int statusCode = given()
-                              .when()
-                              .delete(PetEndPoints.DELETE_PET, pet.getId())
-                              .getStatusCode();
-                      return statusCode == 200;
-                  });
+                  .until(() -> given()
+                          .when()
+                          .delete(PetEndPoints.DELETE_PET, pet.getId())
+                          .getStatusCode() == 200);
+
     }
 
     @Step("Поиск питомцев по статусу")

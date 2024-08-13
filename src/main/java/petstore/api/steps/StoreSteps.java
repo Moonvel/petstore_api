@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import static io.restassured.RestAssured.given;
 import static petstore.api.spec.Specifications.*;
 
-public class StoreSteps {
+public abstract class StoreSteps {
     static PropsHelper propsHelper = new PropsHelper();
 
     public static final String baseUrl = propsHelper.getProperty("baseUrl");

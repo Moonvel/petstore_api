@@ -3,6 +3,7 @@ package petstore.api.tests;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import petstore.api.dto.store.StoreOrder;
 import petstore.api.steps.StoreSteps;
@@ -19,7 +20,7 @@ public class StoreApiTests {
 	}
 
 	@Test
-	@Description("Получение заказа")
+	@DisplayName("Получение заказа")
 	public void getStoreOrderTest() {
 		StoreSteps.placeStoreOrder(order);
 		StoreOrder receivedOrder = StoreSteps.getStoreOrder(order);
@@ -28,13 +29,13 @@ public class StoreApiTests {
 	}
 
 	@Test
-	@Description("Размещение заказа")
+	@DisplayName("Размещение заказа")
 	public void placeOrderTest() {
 		StoreSteps.placeStoreOrder(order);
 	}
 
 	@Test
-	@Description("Удаление заказа")
+	@DisplayName("Удаление заказа")
 	public void deleteStoreOrder() {
 		StoreSteps.placeStoreOrder(order);
 		StoreSteps.deleteStoreOrder(order);

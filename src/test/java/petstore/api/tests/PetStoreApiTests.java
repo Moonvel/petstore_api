@@ -6,6 +6,7 @@ import io.qameta.allure.Owner;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,13 +35,13 @@ public class PetStoreApiTests {
     }
 
     @Test
-    @Description("Добавление нового питомца")
+    @DisplayName("Добавление нового питомца")
     public void addNewPetTest() {
         PetSteps.addPet(pet);
     }
 
     @Test
-    @Description("Поиск и сравнение питомца созданного в первом тесте")
+    @DisplayName("Поиск и сравнение питомца созданного в первом тесте")
     public void findPetByIdTest() {
         PetSteps.addPet(pet);
         Pet receivedPet = PetSteps.findPet(pet);
@@ -49,7 +50,7 @@ public class PetStoreApiTests {
     }
 
     @Test
-    @Description("Обновление существующего питомца")
+    @DisplayName("Обновление существующего питомца")
     public void updatePetTest() {
         PetSteps.addPet(pet);
         Pet receivedPet = PetSteps.updatingPet(changedPet);
@@ -60,7 +61,7 @@ public class PetStoreApiTests {
     @Disabled
     @Flaky
     @Test
-    @Description("Обновление питомца в магазине через форму")
+    @DisplayName("Обновление питомца в магазине через форму")
     public void updatePetNameAndStatusWithFormDataTest() {
         String newName = "changed";
         Status newStatus = Status.SOLD;
@@ -75,13 +76,13 @@ public class PetStoreApiTests {
     }
 
     @Test
-    @Description("Загрузить изображение питомца по id")
+    @DisplayName("Загрузить изображение питомца по id")
     public void uploadAnImageTest() {
         PetSteps.uploadAnImageTest(pet.getId(), imagePath);
     }
 
     @Test
-    @Description("Удаление созданного питомца")
+    @DisplayName("Удаление созданного питомца")
     public void deletePetTest() {
         PetSteps.addPet(pet);
         PetSteps.deletePet(pet);
@@ -89,14 +90,14 @@ public class PetStoreApiTests {
 
 
     @Test
-    @Description("Поиск несуществующего питомца")
+    @DisplayName("Поиск несуществующего питомца")
     public void nonExistPetTest() {
         PetSteps.findNonExistPetTest(PetFabric.nonExistingPet());
     }
 
     @ParameterizedTest
     @EnumSource(Status.class)
-    @Description("Поиск питомца по статусу, проверка на соответсвтие статуса питомцев искомому")
+    @DisplayName("Поиск питомца по статусу, проверка на соответсвтие статуса питомцев искомому")
     public void findPetsByStatusTest(Status status) {
         Pet[] pets = PetSteps.findPetsByStatus(status);
         assertThat(pets)
@@ -104,7 +105,7 @@ public class PetStoreApiTests {
     }
 
     @Test
-    @Description("Использование некорректного body при добавлении питомца")
+    @DisplayName("Использование некорректного body при добавлении питомца")
     public void addPetWrongBodyTest() {
         PetSteps.addPetWrongBody();
     }

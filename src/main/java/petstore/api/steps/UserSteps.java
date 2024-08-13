@@ -3,6 +3,7 @@ package petstore.api.steps;
 import io.qameta.allure.Step;
 import org.awaitility.Awaitility;
 import petstore.api.dto.user.User;
+import petstore.api.endpoints.PetEndPoints;
 import petstore.api.endpoints.UserEndPoints;
 import petstore.api.props.PropsHelper;
 import petstore.api.spec.Specifications;
@@ -39,7 +40,7 @@ public abstract class UserSteps {
 		final User[] receivedUserHolder = new User[1];
 		Awaitility.await()
 				  .atMost(10, TimeUnit.SECONDS)
-				  .pollDelay(1000, TimeUnit.MILLISECONDS)
+				  .pollDelay(2000, TimeUnit.MILLISECONDS)
 				  .pollInterval(1000, TimeUnit.MILLISECONDS)
 				  .until(() -> {
 					  User recievedUser = given()
@@ -77,8 +78,14 @@ public abstract class UserSteps {
 	@Step("Удаление пользователя")
 	public static void deleteUser(String username) {
 		installSpecification(requestSpec(baseUrl), responseSpecOK200(responseTime));
-		given().when()
-			   .delete(UserEndPoints.DELETE_USER, username);
+		Awaitility.await()
+				  .atMost(10, TimeUnit.SECONDS)
+				  .pollDelay(2000, TimeUnit.MILLISECONDS)
+				  .pollInterval(1000, TimeUnit.MILLISECONDS)
+				  .until(() -> given()
+						  .when()
+						  .delete(UserEndPoints.DELETE_USER, username)
+						  .getStatusCode() == 200);
 	}
 
 	@Step("Login")

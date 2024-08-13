@@ -116,7 +116,7 @@ public abstract class PetSteps {
         Specifications.installSpecification(requestSpec(baseUrl), responseSpecError(200));
         Awaitility.await()
                   .atMost(10, TimeUnit.SECONDS)
-                  .pollDelay(1000, TimeUnit.MILLISECONDS)
+                  .pollDelay(2000, TimeUnit.MILLISECONDS)
                   .pollInterval(1000, TimeUnit.MILLISECONDS)
                   .until(() -> given()
                           .when()

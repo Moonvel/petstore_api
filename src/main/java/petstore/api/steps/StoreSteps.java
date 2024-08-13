@@ -28,8 +28,8 @@ public abstract class StoreSteps {
 
         final StoreOrder[] receivedStoreOrderHolder = new StoreOrder[1];
         Awaitility.await()
-                .atMost(10, TimeUnit.SECONDS)
-                .pollDelay(1000, TimeUnit.MILLISECONDS)
+                .atMost(15, TimeUnit.SECONDS)
+                .pollDelay(5000, TimeUnit.MILLISECONDS)
                 .pollInterval(1000, TimeUnit.MILLISECONDS)
                 .until(() -> {
                     Response response = given().when()

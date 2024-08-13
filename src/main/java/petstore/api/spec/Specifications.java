@@ -1,5 +1,6 @@
 package petstore.api.spec;
 
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
@@ -15,7 +16,8 @@ public class Specifications {
     private static RequestSpecBuilder getDefaultSpec(String url) {
         return new RequestSpecBuilder()
                 .setAccept(ContentType.JSON)
-                .setBaseUri(url);
+                .setBaseUri(url)
+                .addFilter(new AllureRestAssured());
     }
 
     public static RequestSpecification requestSpec(String url) {

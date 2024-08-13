@@ -8,8 +8,8 @@ public abstract class UserFabric {
 
     public static User defaultUser() {
         return User.builder()
-                .setId(111)
-                .setUsername(faker.name().username())
+                .setId(112)
+                .setUsername("Just User")
                 .setFirstName(faker.name().firstName())
                 .setLastName(faker.name().lastName())
                 .setEmail(faker.internet().emailAddress())
@@ -21,7 +21,7 @@ public abstract class UserFabric {
 
     public static User noNameUser() {
         return User.builder()
-                .setId(112)
+                .setId(113)
                 .setUsername("noName")
                 .build();
     }

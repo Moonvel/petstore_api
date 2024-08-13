@@ -13,7 +13,7 @@ public abstract class PetFabric {
 
     public static Pet defaultPet() {
         Category hedgehog = Category.builder()
-                .setId(7)
+                .setId(8)
                 .setName("Ежи")
                 .build();
 
